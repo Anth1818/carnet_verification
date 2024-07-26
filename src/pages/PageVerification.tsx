@@ -3,10 +3,11 @@ import { Header } from "../components/Header";
 import { NotVerification } from "../components/NotVerification";
 import { Verification } from "../components/Verification";
 import { useParams } from "react-router-dom";
+import { ErrorRequest } from "../components/ErrorRequest";
 
 export function PageVerification() {
   const { id } = useParams();
-  const API = `http://172.30.40.23:3000/license/${id}`;
+  const API = `http://172.30.60.24:3000/license/${id}`;
 
   type Worker = {
     id: string;
@@ -18,9 +19,8 @@ export function PageVerification() {
   };
 
   const [workerVerified, setWorkerVerified] = useState<Worker | null>(null); // Update the state type to Worker | null
-  const [loading, setLoading] = useState<Boolean>((true));
-
-  
+  const [loading, setLoading] = useState<Boolean>(true);
+  const [errorRequest, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(API)
@@ -28,7 +28,7 @@ export function PageVerification() {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error("Error: " + response.status);
+          throw new Error(response.status.toString());
         }
       })
       .then((data) => {
@@ -36,16 +36,25 @@ export function PageVerification() {
       })
       .catch((error) => {
         console.error("Error:", error);
-      }).finally(() => {setLoading(false)});
+        if (error instanceof TypeError) {
+          setError("La API no está en línea o hay un problema de red");
+        } else {
+          setError(`Error: ${error.message}`);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
+
+
   return (
     <>
       <Header />
-      {loading && <div><h2 className="text-2xl">Verificando...</h2></div>}
-      {workerVerified && !loading && (
-        <Verification  worker={workerVerified} />
-      )}
-      {!workerVerified && !loading && <NotVerification id={id} />}
+      {loading && <div>Verificando...</div>}
+      {errorRequest && <ErrorRequest error={errorRequest}/>}
+      {workerVerified && !loading && <Verification worker={workerVerified} />}
+      {!workerVerified && !loading && !errorRequest && <NotVerification id={id} />}
     </>
   );
 }
