@@ -11,7 +11,7 @@ export function Page404() {
             </div>
 
             <div className="text-gray-400 font-medium text-sm md:text-xl lg:text-2xl mt-8">
-                La página que buscas no se encuentra en este servidor
+                La página que buscas no se encuentra en esta aplicación
             </div>
         </div>
 

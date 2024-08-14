@@ -3,7 +3,7 @@ interface IVerificationProps {
 }
 
 export function Verification({ worker }: IVerificationProps) {
-  const { names, position, department, status, last_names,identity_card } = worker as {
+  const { names, status, last_names,identity_card } = worker as {
     names: string;
     last_names: string;
     position: string;

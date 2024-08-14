@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/carnet/verification/:id" element={<PageVerification />} />
+        <Route path="/:id" element={<PageVerification />} />
         <Route path="*" element={<Page404 />} />
       </Routes>
     </>
